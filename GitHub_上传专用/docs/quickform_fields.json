@@ -1,0 +1,1660 @@
+{
+  "payload_version": "study2-qf-v2",
+  "fields": {
+    "payload_version": {
+      "type": "string",
+      "description": "study2-qf-v2；历史study2-qf-v1只按其原设计读取",
+      "source": "常量",
+      "nullable": false
+    },
+    "record_type": {
+      "type": "string",
+      "description": "study2_dce_completed",
+      "source": "常量",
+      "nullable": false
+    },
+    "participant_id": {
+      "type": "uuid",
+      "description": "QuickForm全局UUID，命名空间按来源实例/原编号/模式生成",
+      "source": "quickform_payload.participant_uuid",
+      "nullable": false
+    },
+    "participant_uuid": {
+      "type": "uuid",
+      "description": "与QuickForm participant_id相同；本地CSV连接键",
+      "source": "同上",
+      "nullable": false
+    },
+    "local_participant_id": {
+      "type": "string",
+      "description": "本库原参与编号，不重写旧编号",
+      "source": "participants.id",
+      "nullable": false
+    },
+    "source_instance": {
+      "type": "string",
+      "description": "最初来源实例",
+      "source": "participants.source_instance",
+      "nullable": false
+    },
+    "source_participant_id": {
+      "type": "string",
+      "description": "最初来源参与编号",
+      "source": "participants.source_participant_id",
+      "nullable": false
+    },
+    "submission_key": {
+      "type": "string",
+      "description": "全局UUID:设计版本，用于核查，不是远端幂等保证",
+      "source": "派生标识",
+      "nullable": false
+    },
+    "experiment_group": {
+      "type": "enum",
+      "description": "G1图表无AI；G2自然无AI；G3图表有AI；G4自然有AI",
+      "source": "participants.group_code",
+      "nullable": false
+    },
+    "visual_type": {
+      "type": "enum",
+      "description": "环境数据图表型 / 自然场景型",
+      "source": "按广告组映射",
+      "nullable": false
+    },
+    "visual_code": {
+      "type": "enum",
+      "description": "chart / nature",
+      "source": "按广告组映射",
+      "nullable": false
+    },
+    "visual": {
+      "type": "integer",
+      "description": "1图表 / 0自然，保留原统计定义",
+      "source": "按广告组映射",
+      "nullable": false
+    },
+    "ai_disclosure": {
+      "type": "integer",
+      "description": "0无AI披露 / 1有AI披露",
+      "source": "按广告组映射",
+      "nullable": false
+    },
+    "dce_block": {
+      "type": "enum",
+      "description": "A / B，原区组",
+      "source": "participants.block",
+      "nullable": false
+    },
+    "design_version": {
+      "type": "string",
+      "description": "study2-1l-3price-v2；不同版本禁止无标识混合",
+      "source": "participants.design_version",
+      "nullable": false
+    },
+    "task_design_sha256": {
+      "type": "sha256",
+      "description": "原题目配置文件哈希",
+      "source": "participants.task_hash",
+      "nullable": false
+    },
+    "survey_mode": {
+      "type": "enum",
+      "description": "demo / pilot / formal；demo不会发送",
+      "source": "participants.mode",
+      "nullable": false
+    },
+    "started_at": {
+      "type": "iso_datetime",
+      "description": "实验开始时间，带时区UTC",
+      "source": "participants.created_at",
+      "nullable": false
+    },
+    "completed_at": {
+      "type": "iso_datetime",
+      "description": "全部DCE及后续问卷提交时间",
+      "source": "participants.completed_at",
+      "nullable": false
+    },
+    "duration_seconds": {
+      "type": "number",
+      "description": "完整实验经过秒数，包含暂停",
+      "source": "completed_at-started_at",
+      "nullable": false
+    },
+    "dce_duration_seconds": {
+      "type": "number",
+      "description": "DCE经过秒数；旧未采集为空",
+      "source": "dce_completed_at-dce_started_at",
+      "nullable": true
+    },
+    "completion_status": {
+      "type": "enum",
+      "description": "completed；不提交未完成答卷",
+      "source": "本地完成校验",
+      "nullable": false
+    },
+    "n_choice_tasks": {
+      "type": "integer",
+      "description": "8，固定当前区组完整题数",
+      "source": "实际记录数校验",
+      "nullable": false
+    },
+    "stimulus_started_at": {
+      "type": "iso_datetime",
+      "description": "广告浏览开始；旧未采集为空",
+      "source": "participants.stimulus_started_at",
+      "nullable": true
+    },
+    "stimulus_end_at": {
+      "type": "iso_datetime",
+      "description": "广告浏览结束时间",
+      "source": "participants.stimulus_end_at",
+      "nullable": true
+    },
+    "stimulus_versions_json": {
+      "type": "json_string",
+      "description": "当时广告哈希；历史未知为空",
+      "source": "participants.stimulus_versions",
+      "nullable": true
+    },
+    "consent_version": {
+      "type": "string",
+      "description": "实际同意说明版本；旧未知为空",
+      "source": "participants.consent_version",
+      "nullable": true
+    },
+    "questionnaire_json": {
+      "type": "json_string",
+      "description": "所有实际采集的背景/回忆题及已注册扩展答案",
+      "source": "participants+questionnaire_answers",
+      "nullable": false
+    },
+    "green_consumption_values_json": {
+      "type": "json_string",
+      "description": "当前为字符串null；不生成未开发量表答案",
+      "source": "实际扩展答案，当前无",
+      "nullable": false
+    },
+    "green_consumption_values_status": {
+      "type": "enum",
+      "description": "当前not_collected；开发并实际采集后才可为collected",
+      "source": "是否实际存在该扩展答案",
+      "nullable": false
+    },
+    "oat_drink_purchase_experience": {
+      "type": "json_value",
+      "description": "单独燕麦饮经验题，当前未开发，为null",
+      "source": "实际扩展答案，当前无",
+      "nullable": true
+    },
+    "oat_drink_purchase_experience_status": {
+      "type": "enum",
+      "description": "当前not_collected，不冒充植物基购买经验",
+      "source": "是否实际存在该扩展答案",
+      "nullable": false
+    },
+    "age": {
+      "type": "integer",
+      "description": "18至100周岁",
+      "source": "participants.age",
+      "nullable": false
+    },
+    "gender": {
+      "type": "enum",
+      "description": "female/male/other/undisclosed",
+      "source": "participants.gender",
+      "nullable": false
+    },
+    "education": {
+      "type": "enum",
+      "description": "highschool/college/bachelor/masterplus/undisclosed",
+      "source": "participants.education",
+      "nullable": false
+    },
+    "online_purchase": {
+      "type": "enum",
+      "description": "monthly1/monthly2to3/weekly1plus/undisclosed",
+      "source": "participants.online_purchase",
+      "nullable": false
+    },
+    "plant_based_purchase": {
+      "type": "enum",
+      "description": "yes/no/unsure：植物基饮品购买经验",
+      "source": "participants.plant_based_purchase",
+      "nullable": false
+    },
+    "manip_visual": {
+      "type": "enum",
+      "description": "chart/nature/unsure：广告类型回忆",
+      "source": "participants.manip_visual",
+      "nullable": false
+    },
+    "manip_ai": {
+      "type": "enum",
+      "description": "yes/no/unsure：AI披露回忆",
+      "source": "participants.manip_ai",
+      "nullable": false
+    },
+    "dce_choices_json": {
+      "type": "json_string",
+      "description": "按实际呈现顺序保存8道完整选择，不补造记录",
+      "source": "choices+固定题目+显示快照+过程记录",
+      "nullable": false
+    },
+    "detail_views_json": {
+      "type": "json_string",
+      "description": "实际逐次详情日志；无日志为空数组",
+      "source": "detail_views",
+      "nullable": false
+    },
+    "record_sha256": {
+      "type": "sha256",
+      "description": "除本字段之外、按键排序的UTF-8 JSON的SHA256，用于远端核查",
+      "source": "确定性序列化",
+      "nullable": false
+    },
+    "task_1_A_origin": {
+      "type": "number",
+      "description": "第1个实际呈现题，显示商品A：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_1_A_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_1_A_environmental_verification": {
+      "type": "number",
+      "description": "第1个实际呈现题，显示商品A：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_1_A_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_1_A_quality_information": {
+      "type": "number",
+      "description": "第1个实际呈现题，显示商品A：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_1_A_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_1_A_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_1_A_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_1_B_origin": {
+      "type": "number",
+      "description": "第1个实际呈现题，显示商品B：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_1_B_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_1_B_environmental_verification": {
+      "type": "number",
+      "description": "第1个实际呈现题，显示商品B：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_1_B_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_1_B_quality_information": {
+      "type": "number",
+      "description": "第1个实际呈现题，显示商品B：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_1_B_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_1_B_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_1_B_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_1_id": {
+      "type": "string",
+      "description": "原始任务编号T01至T16",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_1_position": {
+      "type": "integer",
+      "description": "实际页面呈现序号1至8",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_1_choice": {
+      "type": "enum",
+      "description": "A/B/N；N独立不购买",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_1_swapped": {
+      "type": "integer",
+      "description": "0未交换/1已交换A/B位置",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_1_started_at": {
+      "type": "iso_datetime",
+      "description": "该题首次提供时间，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_1_completed_at": {
+      "type": "iso_datetime",
+      "description": "实际提交时间",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_1_duration_seconds": {
+      "type": "number",
+      "description": "该题经过秒数，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_2_A_origin": {
+      "type": "number",
+      "description": "第2个实际呈现题，显示商品A：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_2_A_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_2_A_environmental_verification": {
+      "type": "number",
+      "description": "第2个实际呈现题，显示商品A：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_2_A_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_2_A_quality_information": {
+      "type": "number",
+      "description": "第2个实际呈现题，显示商品A：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_2_A_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_2_A_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_2_A_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_2_B_origin": {
+      "type": "number",
+      "description": "第2个实际呈现题，显示商品B：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_2_B_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_2_B_environmental_verification": {
+      "type": "number",
+      "description": "第2个实际呈现题，显示商品B：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_2_B_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_2_B_quality_information": {
+      "type": "number",
+      "description": "第2个实际呈现题，显示商品B：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_2_B_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_2_B_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_2_B_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_2_id": {
+      "type": "string",
+      "description": "原始任务编号T01至T16",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_2_position": {
+      "type": "integer",
+      "description": "实际页面呈现序号1至8",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_2_choice": {
+      "type": "enum",
+      "description": "A/B/N；N独立不购买",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_2_swapped": {
+      "type": "integer",
+      "description": "0未交换/1已交换A/B位置",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_2_started_at": {
+      "type": "iso_datetime",
+      "description": "该题首次提供时间，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_2_completed_at": {
+      "type": "iso_datetime",
+      "description": "实际提交时间",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_2_duration_seconds": {
+      "type": "number",
+      "description": "该题经过秒数，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_3_A_origin": {
+      "type": "number",
+      "description": "第3个实际呈现题，显示商品A：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_3_A_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_3_A_environmental_verification": {
+      "type": "number",
+      "description": "第3个实际呈现题，显示商品A：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_3_A_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_3_A_quality_information": {
+      "type": "number",
+      "description": "第3个实际呈现题，显示商品A：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_3_A_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_3_A_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_3_A_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_3_B_origin": {
+      "type": "number",
+      "description": "第3个实际呈现题，显示商品B：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_3_B_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_3_B_environmental_verification": {
+      "type": "number",
+      "description": "第3个实际呈现题，显示商品B：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_3_B_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_3_B_quality_information": {
+      "type": "number",
+      "description": "第3个实际呈现题，显示商品B：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_3_B_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_3_B_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_3_B_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_3_id": {
+      "type": "string",
+      "description": "原始任务编号T01至T16",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_3_position": {
+      "type": "integer",
+      "description": "实际页面呈现序号1至8",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_3_choice": {
+      "type": "enum",
+      "description": "A/B/N；N独立不购买",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_3_swapped": {
+      "type": "integer",
+      "description": "0未交换/1已交换A/B位置",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_3_started_at": {
+      "type": "iso_datetime",
+      "description": "该题首次提供时间，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_3_completed_at": {
+      "type": "iso_datetime",
+      "description": "实际提交时间",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_3_duration_seconds": {
+      "type": "number",
+      "description": "该题经过秒数，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_4_A_origin": {
+      "type": "number",
+      "description": "第4个实际呈现题，显示商品A：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_4_A_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_4_A_environmental_verification": {
+      "type": "number",
+      "description": "第4个实际呈现题，显示商品A：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_4_A_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_4_A_quality_information": {
+      "type": "number",
+      "description": "第4个实际呈现题，显示商品A：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_4_A_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_4_A_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_4_A_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_4_B_origin": {
+      "type": "number",
+      "description": "第4个实际呈现题，显示商品B：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_4_B_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_4_B_environmental_verification": {
+      "type": "number",
+      "description": "第4个实际呈现题，显示商品B：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_4_B_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_4_B_quality_information": {
+      "type": "number",
+      "description": "第4个实际呈现题，显示商品B：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_4_B_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_4_B_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_4_B_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_4_id": {
+      "type": "string",
+      "description": "原始任务编号T01至T16",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_4_position": {
+      "type": "integer",
+      "description": "实际页面呈现序号1至8",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_4_choice": {
+      "type": "enum",
+      "description": "A/B/N；N独立不购买",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_4_swapped": {
+      "type": "integer",
+      "description": "0未交换/1已交换A/B位置",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_4_started_at": {
+      "type": "iso_datetime",
+      "description": "该题首次提供时间，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_4_completed_at": {
+      "type": "iso_datetime",
+      "description": "实际提交时间",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_4_duration_seconds": {
+      "type": "number",
+      "description": "该题经过秒数，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_5_A_origin": {
+      "type": "number",
+      "description": "第5个实际呈现题，显示商品A：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_5_A_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_5_A_environmental_verification": {
+      "type": "number",
+      "description": "第5个实际呈现题，显示商品A：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_5_A_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_5_A_quality_information": {
+      "type": "number",
+      "description": "第5个实际呈现题，显示商品A：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_5_A_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_5_A_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_5_A_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_5_B_origin": {
+      "type": "number",
+      "description": "第5个实际呈现题，显示商品B：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_5_B_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_5_B_environmental_verification": {
+      "type": "number",
+      "description": "第5个实际呈现题，显示商品B：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_5_B_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_5_B_quality_information": {
+      "type": "number",
+      "description": "第5个实际呈现题，显示商品B：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_5_B_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_5_B_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_5_B_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_5_id": {
+      "type": "string",
+      "description": "原始任务编号T01至T16",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_5_position": {
+      "type": "integer",
+      "description": "实际页面呈现序号1至8",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_5_choice": {
+      "type": "enum",
+      "description": "A/B/N；N独立不购买",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_5_swapped": {
+      "type": "integer",
+      "description": "0未交换/1已交换A/B位置",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_5_started_at": {
+      "type": "iso_datetime",
+      "description": "该题首次提供时间，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_5_completed_at": {
+      "type": "iso_datetime",
+      "description": "实际提交时间",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_5_duration_seconds": {
+      "type": "number",
+      "description": "该题经过秒数，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_6_A_origin": {
+      "type": "number",
+      "description": "第6个实际呈现题，显示商品A：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_6_A_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_6_A_environmental_verification": {
+      "type": "number",
+      "description": "第6个实际呈现题，显示商品A：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_6_A_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_6_A_quality_information": {
+      "type": "number",
+      "description": "第6个实际呈现题，显示商品A：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_6_A_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_6_A_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_6_A_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_6_B_origin": {
+      "type": "number",
+      "description": "第6个实际呈现题，显示商品B：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_6_B_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_6_B_environmental_verification": {
+      "type": "number",
+      "description": "第6个实际呈现题，显示商品B：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_6_B_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_6_B_quality_information": {
+      "type": "number",
+      "description": "第6个实际呈现题，显示商品B：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_6_B_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_6_B_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_6_B_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_6_id": {
+      "type": "string",
+      "description": "原始任务编号T01至T16",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_6_position": {
+      "type": "integer",
+      "description": "实际页面呈现序号1至8",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_6_choice": {
+      "type": "enum",
+      "description": "A/B/N；N独立不购买",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_6_swapped": {
+      "type": "integer",
+      "description": "0未交换/1已交换A/B位置",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_6_started_at": {
+      "type": "iso_datetime",
+      "description": "该题首次提供时间，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_6_completed_at": {
+      "type": "iso_datetime",
+      "description": "实际提交时间",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_6_duration_seconds": {
+      "type": "number",
+      "description": "该题经过秒数，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_7_A_origin": {
+      "type": "number",
+      "description": "第7个实际呈现题，显示商品A：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_7_A_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_7_A_environmental_verification": {
+      "type": "number",
+      "description": "第7个实际呈现题，显示商品A：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_7_A_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_7_A_quality_information": {
+      "type": "number",
+      "description": "第7个实际呈现题，显示商品A：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_7_A_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_7_A_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_7_A_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_7_B_origin": {
+      "type": "number",
+      "description": "第7个实际呈现题，显示商品B：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_7_B_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_7_B_environmental_verification": {
+      "type": "number",
+      "description": "第7个实际呈现题，显示商品B：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_7_B_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_7_B_quality_information": {
+      "type": "number",
+      "description": "第7个实际呈现题，显示商品B：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_7_B_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_7_B_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_7_B_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_7_id": {
+      "type": "string",
+      "description": "原始任务编号T01至T16",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_7_position": {
+      "type": "integer",
+      "description": "实际页面呈现序号1至8",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_7_choice": {
+      "type": "enum",
+      "description": "A/B/N；N独立不购买",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_7_swapped": {
+      "type": "integer",
+      "description": "0未交换/1已交换A/B位置",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_7_started_at": {
+      "type": "iso_datetime",
+      "description": "该题首次提供时间，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_7_completed_at": {
+      "type": "iso_datetime",
+      "description": "实际提交时间",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_7_duration_seconds": {
+      "type": "number",
+      "description": "该题经过秒数，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_8_A_origin": {
+      "type": "number",
+      "description": "第8个实际呈现题，显示商品A：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_8_A_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_8_A_environmental_verification": {
+      "type": "number",
+      "description": "第8个实际呈现题，显示商品A：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_8_A_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_8_A_quality_information": {
+      "type": "number",
+      "description": "第8个实际呈现题，显示商品A：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_8_A_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_8_A_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_8_A_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_8_B_origin": {
+      "type": "number",
+      "description": "第8个实际呈现题，显示商品B：0国产/1进口",
+      "source": "实际A/B交换后的tasks.json origin",
+      "nullable": false
+    },
+    "task_8_B_origin_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_8_B_environmental_verification": {
+      "type": "number",
+      "description": "第8个实际呈现题，显示商品B：0基础环境说明/1另附独立核验记录",
+      "source": "实际A/B交换后的tasks.json verification",
+      "nullable": false
+    },
+    "task_8_B_environmental_verification_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_8_B_quality_information": {
+      "type": "number",
+      "description": "第8个实际呈现题，显示商品B：0常规质量信息/1另附本批次报告",
+      "source": "实际A/B交换后的tasks.json quality",
+      "nullable": false
+    },
+    "task_8_B_quality_information_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_8_B_price": {
+      "type": "number",
+      "description": "1 L单盒售价，数值15、24或34元",
+      "source": "实际A/B交换后的tasks.json price",
+      "nullable": false
+    },
+    "task_8_B_price_text": {
+      "type": "string",
+      "description": "上述数值对应的实际显示文字；旧未记录时为空",
+      "source": "choice_display_snapshots",
+      "nullable": true
+    },
+    "task_8_id": {
+      "type": "string",
+      "description": "原始任务编号T01至T16",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_8_position": {
+      "type": "integer",
+      "description": "实际页面呈现序号1至8",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_8_choice": {
+      "type": "enum",
+      "description": "A/B/N；N独立不购买",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_8_swapped": {
+      "type": "integer",
+      "description": "0未交换/1已交换A/B位置",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_8_started_at": {
+      "type": "iso_datetime",
+      "description": "该题首次提供时间，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "task_8_completed_at": {
+      "type": "iso_datetime",
+      "description": "实际提交时间",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": false
+    },
+    "task_8_duration_seconds": {
+      "type": "number",
+      "description": "该题经过秒数，旧未采集为空",
+      "source": "choices/task_views/participants分配记录",
+      "nullable": true
+    },
+    "product_volume_ml": {
+      "type": "integer",
+      "description": "本设计商品规格1000 mL；不把旧数据改记为此规格",
+      "source": "锁定设计配置",
+      "nullable": false
+    },
+    "task_1_A_price_yuan": {
+      "type": "number",
+      "description": "第1个实际呈现题，商品A：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_1_A_price_level": {
+      "type": "number",
+      "description": "第1个实际呈现题，商品A：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_1_A_product_volume_ml": {
+      "type": "number",
+      "description": "第1个实际呈现题，商品A：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_1_B_price_yuan": {
+      "type": "number",
+      "description": "第1个实际呈现题，商品B：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_1_B_price_level": {
+      "type": "number",
+      "description": "第1个实际呈现题，商品B：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_1_B_product_volume_ml": {
+      "type": "number",
+      "description": "第1个实际呈现题，商品B：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_2_A_price_yuan": {
+      "type": "number",
+      "description": "第2个实际呈现题，商品A：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_2_A_price_level": {
+      "type": "number",
+      "description": "第2个实际呈现题，商品A：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_2_A_product_volume_ml": {
+      "type": "number",
+      "description": "第2个实际呈现题，商品A：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_2_B_price_yuan": {
+      "type": "number",
+      "description": "第2个实际呈现题，商品B：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_2_B_price_level": {
+      "type": "number",
+      "description": "第2个实际呈现题，商品B：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_2_B_product_volume_ml": {
+      "type": "number",
+      "description": "第2个实际呈现题，商品B：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_3_A_price_yuan": {
+      "type": "number",
+      "description": "第3个实际呈现题，商品A：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_3_A_price_level": {
+      "type": "number",
+      "description": "第3个实际呈现题，商品A：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_3_A_product_volume_ml": {
+      "type": "number",
+      "description": "第3个实际呈现题，商品A：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_3_B_price_yuan": {
+      "type": "number",
+      "description": "第3个实际呈现题，商品B：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_3_B_price_level": {
+      "type": "number",
+      "description": "第3个实际呈现题，商品B：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_3_B_product_volume_ml": {
+      "type": "number",
+      "description": "第3个实际呈现题，商品B：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_4_A_price_yuan": {
+      "type": "number",
+      "description": "第4个实际呈现题，商品A：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_4_A_price_level": {
+      "type": "number",
+      "description": "第4个实际呈现题，商品A：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_4_A_product_volume_ml": {
+      "type": "number",
+      "description": "第4个实际呈现题，商品A：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_4_B_price_yuan": {
+      "type": "number",
+      "description": "第4个实际呈现题，商品B：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_4_B_price_level": {
+      "type": "number",
+      "description": "第4个实际呈现题，商品B：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_4_B_product_volume_ml": {
+      "type": "number",
+      "description": "第4个实际呈现题，商品B：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_5_A_price_yuan": {
+      "type": "number",
+      "description": "第5个实际呈现题，商品A：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_5_A_price_level": {
+      "type": "number",
+      "description": "第5个实际呈现题，商品A：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_5_A_product_volume_ml": {
+      "type": "number",
+      "description": "第5个实际呈现题，商品A：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_5_B_price_yuan": {
+      "type": "number",
+      "description": "第5个实际呈现题，商品B：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_5_B_price_level": {
+      "type": "number",
+      "description": "第5个实际呈现题，商品B：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_5_B_product_volume_ml": {
+      "type": "number",
+      "description": "第5个实际呈现题，商品B：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_6_A_price_yuan": {
+      "type": "number",
+      "description": "第6个实际呈现题，商品A：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_6_A_price_level": {
+      "type": "number",
+      "description": "第6个实际呈现题，商品A：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_6_A_product_volume_ml": {
+      "type": "number",
+      "description": "第6个实际呈现题，商品A：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_6_B_price_yuan": {
+      "type": "number",
+      "description": "第6个实际呈现题，商品B：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_6_B_price_level": {
+      "type": "number",
+      "description": "第6个实际呈现题，商品B：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_6_B_product_volume_ml": {
+      "type": "number",
+      "description": "第6个实际呈现题，商品B：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_7_A_price_yuan": {
+      "type": "number",
+      "description": "第7个实际呈现题，商品A：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_7_A_price_level": {
+      "type": "number",
+      "description": "第7个实际呈现题，商品A：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_7_A_product_volume_ml": {
+      "type": "number",
+      "description": "第7个实际呈现题，商品A：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_7_B_price_yuan": {
+      "type": "number",
+      "description": "第7个实际呈现题，商品B：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_7_B_price_level": {
+      "type": "number",
+      "description": "第7个实际呈现题，商品B：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_7_B_product_volume_ml": {
+      "type": "number",
+      "description": "第7个实际呈现题，商品B：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_8_A_price_yuan": {
+      "type": "number",
+      "description": "第8个实际呈现题，商品A：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_8_A_price_level": {
+      "type": "number",
+      "description": "第8个实际呈现题，商品A：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_8_A_product_volume_ml": {
+      "type": "number",
+      "description": "第8个实际呈现题，商品A：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_8_B_price_yuan": {
+      "type": "number",
+      "description": "第8个实际呈现题，商品B：实际人民币元，15/24/34，与price相同",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_8_B_price_level": {
+      "type": "number",
+      "description": "第8个实际呈现题，商品B：1=15元、2=24元、3=34元；非等间隔金额，不作为连续价格代替price_yuan",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    },
+    "task_8_B_product_volume_ml": {
+      "type": "number",
+      "description": "第8个实际呈现题，商品B：1000，1 L单盒",
+      "source": "当前锁定设计与实际A/B交换位置",
+      "nullable": false
+    }
+  },
+  "extension_pattern": {
+    "questionnaire_<registered_field>": "只有在questionnaire_schema.json注册、并实际采集后出现"
+  },
+  "null_policy": "旧未采集值为空；未开发量表不生成答案；不购买不作为0元商品",
+  "nested_dce_choices": "见QuickForm_字段字典.md；单次8项，按position排序"
+}

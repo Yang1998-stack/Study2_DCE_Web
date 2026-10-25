@@ -1,0 +1,35 @@
+{
+  "version": "study2-16-v1",
+  "task_file": "designs/tasks_legacy_v1.json",
+  "task_sha256": "e695ba4d0098f5b17938cd121d7f4205893e4b627b5de655ae32fbeb3572d834",
+  "task_count": 16,
+  "tasks_per_participant": 8,
+  "blocks": [
+    "A",
+    "B"
+  ],
+  "levels": {
+    "origin": [
+      0,
+      1
+    ],
+    "verification": [
+      0,
+      1
+    ],
+    "quality": [
+      0,
+      1
+    ],
+    "price": [
+      4,
+      6,
+      8,
+      10
+    ]
+  },
+  "note": "16题双区组预测试候选设计；未来设计须使用新的版本、配置和独立分析，不能覆盖本版本。",
+  "product_volume_ml": 250,
+  "detail_content_version": "study2-details-v1",
+  "status": "archived"
+}

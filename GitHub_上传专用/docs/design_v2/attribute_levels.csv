@@ -1,0 +1,10 @@
+﻿attribute,level_code,consumer_description,price_yuan,product_volume_ml
+origin_import,0,使用国产燕麦原料,,1000
+origin_import,1,使用进口燕麦原料,,1000
+third_party_verification,0,品牌公开燕麦饮的环境信息，提供数据来源与计算方法说明。,,1000
+third_party_verification,1,品牌公开相同的环境信息，并附有独立第三方核验记录，可查看核验详情。,,1000
+batch_quality_report,0,提供配料表、营养成分表、生产日期及保质期等常规商品信息。,,1000
+batch_quality_report,1,提供完全相同的常规商品信息，并额外公开可查看的本批次质量检测报告。,,1000
+price,1,¥15,15,1000
+price,2,¥24,24,1000
+price,3,¥34,34,1000

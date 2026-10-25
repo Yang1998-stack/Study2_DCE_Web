@@ -1,0 +1,338 @@
+[
+  {
+    "id": "V2T01",
+    "block": "A",
+    "seq": 1,
+    "a": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T02",
+    "block": "A",
+    "seq": 2,
+    "a": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T03",
+    "block": "A",
+    "seq": 3,
+    "a": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 1,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 0,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T04",
+    "block": "A",
+    "seq": 4,
+    "a": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T05",
+    "block": "A",
+    "seq": 5,
+    "a": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T06",
+    "block": "A",
+    "seq": 6,
+    "a": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 0,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 1,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T07",
+    "block": "A",
+    "seq": 7,
+    "a": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T08",
+    "block": "A",
+    "seq": 8,
+    "a": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 1,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 0,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T09",
+    "block": "B",
+    "seq": 1,
+    "a": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 0,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 1,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T10",
+    "block": "B",
+    "seq": 2,
+    "a": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T11",
+    "block": "B",
+    "seq": 3,
+    "a": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T12",
+    "block": "B",
+    "seq": 4,
+    "a": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T13",
+    "block": "B",
+    "seq": 5,
+    "a": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T14",
+    "block": "B",
+    "seq": 6,
+    "a": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 1,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 0,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T15",
+    "block": "B",
+    "seq": 7,
+    "a": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 15,
+      "price_level": 1,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    }
+  },
+  {
+    "id": "V2T16",
+    "block": "B",
+    "seq": 8,
+    "a": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 0,
+      "price": 24,
+      "price_level": 2,
+      "product_volume_ml": 1000
+    },
+    "b": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 1,
+      "price": 34,
+      "price_level": 3,
+      "product_volume_ml": 1000
+    }
+  }
+]

@@ -1,0 +1,4 @@
+# Regeneration, numerical diagnostics and diagnostic plots only; runtime is stdlib.
+numpy>=2,<3
+scipy>=1.14,<2
+matplotlib>=3.9,<4

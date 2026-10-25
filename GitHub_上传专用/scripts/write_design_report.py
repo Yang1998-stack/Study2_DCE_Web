@@ -1,0 +1,79 @@
+"""Render the numerical design diagnostics and an auditable Chinese report."""
+import csv
+import json
+from pathlib import Path
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/'docs'/'design_v2'
+
+def main():
+    report=json.loads((OUT/'diagnostics.json').read_text(encoding='utf-8'))
+    tasks=json.loads((ROOT/'designs/tasks_1l_v2.json').read_text(encoding='utf-8'))
+    plt.rcParams['font.sans-serif']=['Microsoft YaHei','DejaVu Sans'];plt.rcParams['axes.unicode_minus']=False
+    fig,axes=plt.subplots(2,2,figsize=(12,8),layout='constrained')
+    colors=['#466f5c','#a7b69a','#d2b783']
+    ax=axes[0,0];levels=[15,24,34];counts=[report['validation']['level_counts']['all']['price'][str(p)] for p in levels]
+    bars=ax.bar([str(p) for p in levels],counts,color=colors)
+    ax.bar_label(bars);ax.set(title='价格分布（32个商品位置）',xlabel='1 L单盒价格（元）',ylabel='出现次数');ax.set_ylim(0,15)
+    ax=axes[0,1];eigs=np.linalg.eigvalsh(np.array(report['primary']['information_matrix']));ax.plot(range(1,13),eigs,'o-',color=colors[0]);ax.set_yscale('log');ax.set(title='12参数信息矩阵特征值',xlabel='特征值序号',ylabel='特征值（对数尺度）')
+    ax=axes[1,0];corr=np.array(report['validation']['raw_profile_correlations']);im=ax.imshow(corr,cmap='RdBu_r',vmin=-1,vmax=1)
+    labels=['原料来源','环境核验','质量资料','元价格'];ax.set_xticks(range(4),labels,rotation=20);ax.set_yticks(range(4),labels)
+    for i in range(4):
+        for j in range(4):ax.text(j,i,f'{corr[i,j]:.3f}',ha='center',va='center',color='white' if abs(corr[i,j])>.6 else '#222')
+    ax.set_title('商品属性相关（非选择结果）');fig.colorbar(im,ax=ax,shrink=.8)
+    ax=axes[1,1];values=[r['relative_efficiency_bound']*100 for r in report['sensitivity']]
+    bars=ax.bar(['零先验','中等偏好假设','强价格敏感假设'],values,color=colors);ax.bar_label(bars,fmt='%.2f%%');ax.set_ylim(0,110);ax.set(title='相对各自连续最优上界的效率下界',ylabel='D效率下界（%）')
+    fig.suptitle('1 L三价格候选设计：结构与统计效率诊断（非受访者实测结果）',fontsize=15)
+    fig.savefig(OUT/'design_diagnostics.png',dpi=180);plt.close(fig)
+    primary=report['primary'];linear=report['linear_price'];pos=report['position_augmented'];v=report['validation']
+    lines=['# Study 2：1 L三价格DCE候选设计诊断报告','','状态：**候选方案，尚未获得用户确认，尚未完成预测试，正式收数锁定。**',
+           '',f"设计版本：`{report['version']}`；随机种子：{report['seed']}；题目SHA256：`{report['task_sha256']}`。",'',
+           '## 1. 设计规模与结论范围','','完整候选产品集合由2×2×2×3生成，共24种理论产品配置；这不是24道题。两款购买备选项与独立不购买选项构成每题。选取16道唯一选择任务，A/B两个区组各8题，每人只做一个区组；保持4广告组及各组内区组均衡随机、随机题序和逐题A/B位置交换。',
+           '',f"在下述零先验MNL模型及候选集合下，16题方案主模型满秩（{primary['rank']}/{primary['dimension']}），每个区组分别满秩。相对96个允许选择集的连续D最优上界，选定精确16题的D效率下界为**{report['d_efficiency_lower_bound_restricted']*100:.4f}%**；相对全部276对（包括条件支配题）的连续上界为**{report['d_efficiency_lower_bound_all_pairs']*100:.4f}%**。结构识别及零先验效率没有显示必须增加至24题的不足，因此保留16题/每人8题作为预测试候选。",'',
+           '这些是特定模型与先验下的设计诊断，不是实际参数估计、样本量功效结论、混合Logit全参数最优证明或研究假设检验。必须以预测试估计的价格、退出率、交互及异质性参数重新评估，不能把零先验当成已经获得的先验研究证据。',
+           '', '## 2. 属性水平与控制','','|属性|编码与水平|','|---|---|','|原料来源|0国产燕麦；1进口燕麦|','|环境核验|0基础环境说明；1相同信息另附独立第三方核验记录|','|食品质量资料|0常规合规资料；1相同资料另附本批次报告|','|1 L单盒价格|price_level 1=15元；2=24元；3=34元|','|容量|购买备选项product_volume_ml=1000；N为空|','',
+           '所有价格共享相同基础配方、口味、营养资料和食品安全情境。价格水平仅作研究编码；消费者只看到具体售价，不显示平价/中端/高端等等级。两个信息属性仍分别0/1，未强制绑定。',
+           '', '## 3. 优化准则与参数模型','','以Fisher信息矩阵优化，而非仅统计出现次数。对每题s、广告条件g、A/B交换状态z：',
+           '',r'`M = Σ_s w_s Σ_g,z w_g w_z X_sgzᵀ [diag(p_sgz) − p_sgz p_sgzᵀ] X_sgz`。',
+           '',r'`D-error = exp(−log det(M)/K)`，按每道选择归一化；D效率比为两个设计D-error的反比。绝对D-error随参数尺度而变，不跨不同编码或K直接比较。',
+           '', '主优化将价格作为分类变量（15元为参考，24与34元各一列），避免线性价格方差准则偏好两端而忽略中间价格。基础6参数：原料、环境核验、质量资料、两个价格虚拟变量、不购买ASC。另加6参数：环境核验×视觉、×AI、×视觉×AI，以及不购买ASC×相同三个条件项，共12参数。视觉与AI编码为−0.5/+0.5，交互为两者乘积；三个商品二水平变量按0/1减0.5。N的产品属性为0，N的ASC为1。',
+           '', '信息矩阵平均4个广告条件（各1/4）和两种显示交换（各1/2）。不购买真实纳入概率与信息矩阵，未当成一款0元饮料。仅对所有备选项共同相同的广告主效应本身不可识别；本模型通过可识别的环境交互和退出ASC交互表示组间差异。',
+           '', '算法：24产品构成276个无序不同产品对；在两种原料偏好符号下，对“更多资料不减效用、价格为负”的条件性支配作筛查，保留96对。该符号筛查不是宣称提供报告更安全或核验更环保。多起点（160次）一换一离散选择集交换最大化logdet；从近最优结果中选区组最小logdet较好的划分。随后独立枚举基础A/B方向。',
+           '',f"连续松弛使用乘法重加权，最终等价定理敏感度差 `max trace(M⁻¹I_j)−K` 为{report['restricted_continuous_reference']['equivalence_gap']:.3g}。利用logdet凹性，上界为 `logdet(M_ref)+max敏感度−K`，据此给出上面的保守效率下界；不声称搜索获得组合意义上的全局精确最优。",'',
+           '## 4. 参数识别、价格与位置','','|模型|参数数/秩|D-error|最小特征值|条件数|','|---|---|---|---|---|']
+    for label,met in [('分类价格+环境/退出交互',primary),('线性元价格+环境/退出交互',linear),('分类价格+交互+显示A位置ASC',pos),*[(f'区组{k}，完整交互模型',val) for k,val in report['blocks'].items()],*[(f'区组{k}，基础模型',val) for k,val in report['block_main_models'].items()]]:
+        lines.append(f"|{label}|{met['dimension']}/{met['rank']}|{met['d_error']:.6f}|{met['smallest_eigenvalue']:.6g}|{met['condition_number']:.4f}|")
+    lines+=['','正的最小特征值和满秩说明在所设模型/条件交叉下具有局部结构识别；并不保证有限样本、退出过高、某组样本不足或极端价格敏感时仍有足够精度。线性价格模型的11个参数可识别；应使用实际price_yuan估计价格系数，检查分类价格与线性假设是否相容。',
+            '', 'WTP：若模型使用元价格，二水平属性的边际支付意愿为 `−Δβ属性/βprice_yuan`；如果以`(price_yuan−24)/10`建模，则为`−10×Δβ属性/βprice10`。环境属性在不同广告条件下的Δβ应加入相应交互项。price_level的1/2/3不是等间隔元价格，不能直接代替price_yuan。混合Logit应保留participant_id作为面板ID，并根据预测试确定随机系数分布及支付意愿区间；本报告不生成实际WTP。',
+            '', '## 5. 水平分布、相关性、支配与显示位置','','|范围|原料0/1|环境0/1|质量0/1|15/24/34元|','|---|---|---|---|---|']
+    for scope,c in v['level_counts'].items():
+        vals=['/'.join(str(c[k][str(j)]) for j in (0,1)) for k in ('origin','verification','quality')];vals.append('/'.join(str(c['price'][str(p)]) for p in (15,24,34)))
+        lines.append('|'+scope+'|'+'|'.join(vals)+'|')
+    lines += ['',f"选取16个唯一选择集，使用{v['unique_profiles_used']}/24种候选产品。未要求所有24种产品必须入选；诊断以完整信息矩阵及参数识别为准。原料在区组A为9/7、B为7/9，整体16/16；环境和质量各区组8/8。价格各区组5/6/5。不能用这些均衡次数代替前述D检验。",'',
+              '|相关矩阵（商品位置）|原料|环境|质量|元价格|','|---|---|---|---|---|']
+    for label,row in zip(('原料','环境','质量','元价格'),v['raw_profile_correlations']):lines.append('|'+label+'|'+'|'.join(f'{x:.4f}' for x in row)+'|')
+    lines+=['','A−B差分相关矩阵：','','|相关矩阵（差分）|原料|环境|质量|元价格|','|---|---|---|---|---|']
+    for label,row in zip(('原料','环境','质量','元价格'),v['ab_difference_correlations']):lines.append('|'+label+'|'+'|'.join(f'{x:.4f}' for x in row)+'|')
+    lines += ['',f"在明确列出的两种原料方向、弱偏好额外资料和负价格假设下，选中选择集的条件支配数为{v['selected_conditional_dominance_count']}。若真实偏好符号不同，支配判断也应重新评估。",'',
+              '基础题库A/B方向的二水平及三价格边际次数完全一致，平衡差分总分为0。实际发放仍按原机制逐题独立50%交换，有限样本不保证每个参与者恰好4题交换；服务器保存每题实际交换位。纳入位置ASC的13参数模型满秩。',
+              '', '## 6. 先验敏感性（假设值，不是实测）','','|场景|D-error|相对该场景连续上界的效率下界|','|---|---|---|']
+    for scenario in report['sensitivity']:lines.append(f"|{scenario['scenario']}|{scenario['d_error']:.6f}|{scenario['relative_efficiency_bound']*100:.4f}%|")
+    for scenario in report['sensitivity']:lines.append('\n'+scenario['scenario']+'参数假设：`'+json.dumps(scenario['assumed_parameters'],ensure_ascii=False)+'`；未列项为0。price10为每10元系数。')
+    lines += ['', '强价格敏感假设下下界约90.36%，说明先验偏离会损失效率。没有受访者偏好数据时不能承诺对所有非零参数或随机系数分布最优。JSON另列假设800人×8题时的Fisher标准误，仅用于有限性检查，不是所需样本量、功效建议或真实样本结果。',
+              '', '## 7. 可复核题目与文件','','|任务|区组|A：原料/环境/质量/价格|B：原料/环境/质量/价格|','|---|---|---|---|']
+    for task in tasks:
+        desc=lambda o:f"{o['origin']}/{o['verification']}/{o['quality']}/¥{o['price']}"
+        lines.append(f"|{task['id']}|{task['block']}|{desc(task['a'])}|{desc(task['b'])}|")
+    lines += ['', '表中0/1仅为研究编码，不展示给消费者。任务原始A/B是基础题库方向，实际屏幕A/B仍按参与者交换位决定。',
+              '', '文件：[完整24候选产品](candidate_profiles.csv)、[16题CSV](choice_tasks.csv)、[精度完整的诊断JSON](diagnostics.json)、[诊断图](design_diagnostics.png)。任务配置为designs/tasks_1l_v2.json，旧designs/tasks_legacy_v1.json保留给旧设计。',
+              '', '重新生成：`python scripts/design_dce_v2.py`；生成报告图：`python scripts/write_design_report.py`。生成后如题目哈希变化，应重新审核版本和审批，不能沿用旧审批。`config/design_approval.json`目前researcher_approved=false、pilot_completed=false，正式HTTP入口和正式QuickForm发送均再次校验，环境变量不能绕过。',
+              '', '## 方法参考','','[Rose & Bliemer (2009), Constructing Efficient Stated Choice Experimental Designs](https://doi.org/10.1080/01441640902827623)：用于界定基于信息矩阵和先验的效率设计；本文数值均由本项目代码重新计算。',
+              '', '[Goos, Vermeulen & Vandebroek (2010), D-optimal conjoint choice designs with no-choice options](https://repub.eur.nl/pub/19219)：说明退出备选项需要进入设计模型。本项目采用MNL信息而非该文的嵌套Logit，不声称复制其最优性结论。']
+    (OUT/'DCE设计诊断报告.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+    print(OUT/'DCE设计诊断报告.md')
+
+if __name__=='__main__':main()

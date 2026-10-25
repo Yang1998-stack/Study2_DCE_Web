@@ -1,0 +1,34 @@
+{
+  "version": "study2-1l-3price-v2",
+  "task_file": "designs/tasks_1l_v2.json",
+  "task_sha256": "13f951b8e1b28c00fde362b54df8d9fdbaa47d9a912a09ba0025d36f2a338136",
+  "task_count": 16,
+  "tasks_per_participant": 8,
+  "blocks": [
+    "A",
+    "B"
+  ],
+  "levels": {
+    "origin": [
+      0,
+      1
+    ],
+    "verification": [
+      0,
+      1
+    ],
+    "quality": [
+      0,
+      1
+    ],
+    "price": [
+      15,
+      24,
+      34
+    ]
+  },
+  "product_volume_ml": 1000,
+  "detail_content_version": "study2-details-1l-v2",
+  "status": "candidate_pending_review_and_pilot",
+  "note": "全新24候选产品、16题双区组局部D-efficient设计；未经研究者确认及预测试不得正式收数。诊断见docs/design_v2。"
+}

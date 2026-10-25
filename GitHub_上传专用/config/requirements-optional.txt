@@ -1,0 +1,2 @@
+# Only needed to import .xlsx (CSV and the server require no third-party packages).
+openpyxl>=3.1.5,<4

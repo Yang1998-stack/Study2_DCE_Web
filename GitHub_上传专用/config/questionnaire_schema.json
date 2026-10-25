@@ -1,0 +1,5 @@
+{
+  "version": "study2-questionnaire-extension-v1",
+  "fields": {},
+  "note": "当前不含绿色消费价值观量表或单独的燕麦饮购买经验问题。不生成这些答案。未来须在fields注册字段并实现问卷页面后才能实际采集。"
+}

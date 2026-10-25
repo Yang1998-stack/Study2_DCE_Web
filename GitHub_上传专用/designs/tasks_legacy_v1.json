@@ -1,0 +1,274 @@
+[
+  {
+    "id": "T01",
+    "block": "A",
+    "seq": 1,
+    "a": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 1,
+      "price": 8
+    },
+    "b": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 0,
+      "price": 6
+    }
+  },
+  {
+    "id": "T02",
+    "block": "A",
+    "seq": 2,
+    "a": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 6
+    },
+    "b": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 4
+    }
+  },
+  {
+    "id": "T03",
+    "block": "A",
+    "seq": 3,
+    "a": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 10
+    },
+    "b": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 4
+    }
+  },
+  {
+    "id": "T04",
+    "block": "A",
+    "seq": 4,
+    "a": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 0,
+      "price": 8
+    },
+    "b": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 1,
+      "price": 10
+    }
+  },
+  {
+    "id": "T05",
+    "block": "A",
+    "seq": 5,
+    "a": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 0,
+      "price": 4
+    },
+    "b": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 1,
+      "price": 6
+    }
+  },
+  {
+    "id": "T06",
+    "block": "A",
+    "seq": 6,
+    "a": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 10
+    },
+    "b": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 6
+    }
+  },
+  {
+    "id": "T07",
+    "block": "A",
+    "seq": 7,
+    "a": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 0,
+      "price": 8
+    },
+    "b": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 1,
+      "price": 10
+    }
+  },
+  {
+    "id": "T08",
+    "block": "A",
+    "seq": 8,
+    "a": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 8
+    },
+    "b": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 4
+    }
+  },
+  {
+    "id": "T09",
+    "block": "B",
+    "seq": 1,
+    "a": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 8
+    },
+    "b": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 10
+    }
+  },
+  {
+    "id": "T10",
+    "block": "B",
+    "seq": 2,
+    "a": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 6
+    },
+    "b": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 8
+    }
+  },
+  {
+    "id": "T11",
+    "block": "B",
+    "seq": 3,
+    "a": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 4
+    },
+    "b": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 8
+    }
+  },
+  {
+    "id": "T12",
+    "block": "B",
+    "seq": 4,
+    "a": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 4
+    },
+    "b": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 10
+    }
+  },
+  {
+    "id": "T13",
+    "block": "B",
+    "seq": 5,
+    "a": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 0,
+      "price": 6
+    },
+    "b": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 1,
+      "price": 10
+    }
+  },
+  {
+    "id": "T14",
+    "block": "B",
+    "seq": 6,
+    "a": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 1,
+      "price": 8
+    },
+    "b": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 0,
+      "price": 6
+    }
+  },
+  {
+    "id": "T15",
+    "block": "B",
+    "seq": 7,
+    "a": {
+      "origin": 1,
+      "verification": 0,
+      "quality": 1,
+      "price": 4
+    },
+    "b": {
+      "origin": 0,
+      "verification": 1,
+      "quality": 0,
+      "price": 10
+    }
+  },
+  {
+    "id": "T16",
+    "block": "B",
+    "seq": 8,
+    "a": {
+      "origin": 0,
+      "verification": 0,
+      "quality": 0,
+      "price": 4
+    },
+    "b": {
+      "origin": 1,
+      "verification": 1,
+      "quality": 1,
+      "price": 6
+    }
+  }
+]
