@@ -20,13 +20,14 @@
       "fallthrough": true
     }
   ],
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "study2-dce-web-db",
-      "migrations_dir": "migrations"
-    }
-  ],
+"d1_databases": [
+  {
+    "binding": "DB",
+    "database_name": "study2-dce-web-db",
+    "database_id": "0c4d0940-651b-4a93-bc0c-052d305961f9",
+    "migrations_dir": "migrations"
+  }
+],
   "vars": {
     "DCE_MODE": "demo",
     "QUICKFORM_API_URL": "https://quickform.cn/api/kajm9wjasx",
