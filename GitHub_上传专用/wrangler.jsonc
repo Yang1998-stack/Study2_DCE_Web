@@ -1,0 +1,46 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "study2-dce-web",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-07-01",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./static",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none",
+    "not_found_handling": "none"
+  },
+  "rules": [
+    {
+      "type": "Text",
+      "globs": [
+        "**/*.sql"
+      ],
+      "fallthrough": true
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "study2-dce-web-db",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "DCE_MODE": "demo",
+    "QUICKFORM_API_URL": "https://quickform.cn/api/kajm9wjasx",
+    "QUICKFORM_FORMAL_ENABLED": "NO",
+    "QUICKFORM_PILOT_ENABLED": "NO",
+    "DCE_ALLOW_FORMAL": "NO"
+  },
+  "triggers": {
+    "crons": [
+      "* * * * *"
+    ]
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1
+  }
+}

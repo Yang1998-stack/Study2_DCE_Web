@@ -1,0 +1,14 @@
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {build} from 'esbuild';
+const [input,output]=process.argv.slice(2);
+if(!input||!output)throw Error('用法：npm run recover:quickform -- QuickForm导出.csv choice_long.csv；也支持JSON数组文件。');
+if(resolve(input)===resolve(output))throw Error('输出文件不能覆盖原始文件');
+await mkdir('.worker-build',{recursive:true});
+for(const entry of ['analysis','files','records'])await build({entryPoints:[`worker/${entry}.ts`],bundle:true,format:'esm',platform:'node',loader:{'.sql':'text'},outfile:`.worker-build/recover-${entry}.mjs`});
+const {quickformLong}=await import(pathToFileURL(resolve('.worker-build/recover-analysis.mjs'))),{readTable}=await import(pathToFileURL(resolve('.worker-build/recover-files.mjs'))),{csv}=await import(pathToFileURL(resolve('.worker-build/recover-records.mjs')));
+const raw=await readFile(input),records=input.toLowerCase().endsWith('.csv')?readTable('quickform.csv',raw,512).rows:JSON.parse(raw.toString('utf8'));
+const rows=quickformLong(Array.isArray(records)?records:[records]);
+if(!rows.length)throw Error('没有可恢复的完整答卷');
+await writeFile(output,csv(Object.keys(rows[0]),rows),{flag:'wx'});console.log(`已核对${rows.length/24}份答卷，生成${rows.length}行；原始文件未修改。`);

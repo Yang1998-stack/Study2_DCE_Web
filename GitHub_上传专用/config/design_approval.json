@@ -1,8 +1,9 @@
 {
   "design_version": "study2-1l-3price-v2",
   "task_sha256": "13f951b8e1b28c00fde362b54df8d9fdbaa47d9a912a09ba0025d36f2a338136",
-  "researcher_approved": false,
-  "pilot_completed": false,
-  "approval_note": "待用户明确确认新设计，并完成预测试；本次不得启用formal。",
-  "pilot_reference": ""
+  "researcher_approved": true,
+  "pilot_completed": true,
+  "approval_note": "研究者在本对话中明确确认当前1 L、15/24/34元设计，并声明预测试已完成；未修改题目或数据。",
+  "pilot_reference": "研究者于2026-10-26在本对话中声明“设计已确认，预测试已完成”。未提供实际预测试日期或原始记录，本项为研究者确认记录，非系统独立核验。",
+  "researcher_confirmed_on": "2026-10-26"
 }

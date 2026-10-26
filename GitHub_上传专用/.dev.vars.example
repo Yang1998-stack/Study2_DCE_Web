@@ -1,0 +1,4 @@
+# Copy to .dev.vars for local use only. Configure production values as Cloudflare Secrets.
+ADMIN_USERNAME=researcher
+ADMIN_PASSWORD=
+QUICKFORM_PILOT_API_URL=

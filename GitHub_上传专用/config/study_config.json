@@ -1,7 +1,11 @@
 {
-  "researcher_contact": "待研究团队填写联系方式",
-  "retention": "待研究团队填写数据保留期限及到期处理方式",
-  "withdrawal": "您可随时退出；已提交记录的撤回请联系研究团队并提供页面上的参与编号。具体截止日期待研究团队填写。",
-  "consent_version": "study2-consent-v1",
-  "ready_for_formal": false
+  "researcher_contact": "研究联系邮箱：230259627@seu.edu.cn",
+  "retention": "研究数据在本研究结束后保留5年，用于本研究的分析、核查和学术报告，由研究团队限制访问。保留期满后删除，或进行不可逆匿名化处理后保留不再能关联个人的分析数据。",
+  "withdrawal": "您可以随时停止填写并退出，不受任何惩罚。答卷提交后30天内，可通过研究联系邮箱提供参与编号，申请撤回能够关联该编号的研究记录；团队核实后从本地数据库、QuickForm及可控副本中处理，并按备份管理流程落实。请妥善保存参与编号，勿提供不必要的身份信息。数据一旦完成不可逆匿名化，或无法凭参与编号定位记录，将无法执行个别撤回。",
+  "consent_version": "study2-consent-v2-formal-20261026",
+  "ready_for_formal": true,
+  "policy_configured_on": "2026-10-26",
+  "retention_years": 5,
+  "withdrawal_days_after_submission": 30,
+  "policy_note": "依据研究者要求拟定并展示的具体研究方案，非统一法定或行业标准。实际数据处理须与展示说明一致；平台不自动声称已执行到期删除或撤回。"
 }
